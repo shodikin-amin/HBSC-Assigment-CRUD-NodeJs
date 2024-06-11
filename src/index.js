@@ -1,6 +1,7 @@
+// require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const { register, login } = require("./auth/auth.js");
+const userController = require("./controller/userControllers.js");
 const {
   createEmployee,
   getEmployees,
@@ -8,29 +9,20 @@ const {
   updateEmployee,
   deleteEmployee,
 } = require("./controller/employeeController.js");
+const errorHandler = require("./config/errorHandler.js");
+const { validateEmail } = require("./middleware/validator.js");
+const { verifyToken } = require("./middleware/auth.js");
 
 const app = express();
 app.use(bodyParser.json());
 
-app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  try {
-    const user = await register(name, email, password);
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+app.post("/register", validateEmail, userController.register);
 
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const result = await login(email, password);
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+app.post("/login", userController.login);
+
+app.delete("/user/:id", verifyToken, userController.deleteUser);
+
+// Employees
 
 app.post("/employees", async (req, res) => {
   const { userId, firstName, lastName, position, email, phoneNumber } =
@@ -92,6 +84,8 @@ app.delete("/employees/:id", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+app.use(errorHandler);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
