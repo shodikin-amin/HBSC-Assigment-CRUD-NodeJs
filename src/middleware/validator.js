@@ -30,6 +30,11 @@ const emailCostumers = [
       }
       return true;
     }),
+  body("phoneNumber")
+    .notEmpty()
+    .withMessage("Phone Number id reuired")
+    .isMobilePhone("id-ID")
+    .withMessage("Invalid Phone Number Inonesia"),
 ];
 
 module.exports = { emailUser, emailCostumers };
