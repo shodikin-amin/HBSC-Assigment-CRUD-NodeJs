@@ -1,4 +1,3 @@
-// require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const userController = require("./controller/usersControllers.js");
@@ -9,10 +8,14 @@ const { verifyToken } = require("./middleware/auth.js");
 
 const app = express();
 app.use(bodyParser.json());
+
 // route user
 app.post("/register", valid.emailUser, userController.register);
 app.post("/login", valid.emailUser, userController.login);
 app.delete("/user/:id", verifyToken, userController.deleteUser);
+app.get("/user/:id", verifyToken, userController.getId);
+app.get("/user", verifyToken, userController.getAll);
+app.put("/user/:id", verifyToken, valid.emailUser, userController.update);
 
 // route costumer
 app.post(
