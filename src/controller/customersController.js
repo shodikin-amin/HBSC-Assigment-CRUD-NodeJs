@@ -4,8 +4,8 @@ const { validationResult } = require("express-validator");
 
 const create = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
     const { fullName, email, phoneNumber, address } = req.body;
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(422).json({
@@ -31,12 +31,12 @@ const create = async (req, res, next) => {
 
 const getAll = async (req, res, next) => {
   try {
-    const costumers = await prisma.costumers.findMany();
+    const customers = await prisma.costumers.findMany();
 
     res.status(200).send({
       success: true,
       message: "Get All Customers Successfull",
-      costumers,
+      customers,
     });
   } catch (error) {
     next(error);
