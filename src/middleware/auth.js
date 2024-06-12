@@ -1,7 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
-const { Unauthorized } = require("http-errors");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
