@@ -3,9 +3,9 @@ const prisma = new PrismaClient();
 const { validationResult } = require("express-validator");
 
 const create = async (req, res, next) => {
-  const { fullName, email, phoneNumber, address } = req.body;
   try {
     const errors = validationResult(req);
+    const { fullName, email, phoneNumber, address } = req.body;
 
     if (!errors.isEmpty()) {
       return res.status(422).json({
@@ -33,9 +33,11 @@ const getAll = async (req, res, next) => {
   try {
     const costumers = await prisma.costumers.findMany();
 
-    res
-      .status(200)
-      .send({ success: true, message: "Create Successfull", costumers });
+    res.status(200).send({
+      success: true,
+      message: "Get All Customers Successfull",
+      costumers,
+    });
   } catch (error) {
     next(error);
   }
@@ -60,7 +62,7 @@ const getId = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Successful",
+      message: "Get Customer Successful",
       customer,
     });
   } catch (error) {
@@ -73,6 +75,16 @@ const update = async (req, res, next) => {
     const { id } = req.params;
     const { fullName, email, phoneNumber, address } = req.body;
     const customerId = parseInt(id, 10);
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        msg: "Validation error",
+        success: false,
+        errors: errors.array(),
+      });
+    }
 
     if (isNaN(customerId)) {
       return res.status(400).json({ error: "Invalid Customer Id" });
@@ -93,7 +105,7 @@ const update = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Customer updated successfully",
+      message: "Customer Updated Successfully",
       customer: updatedCustomer,
     });
   } catch (error) {
@@ -124,7 +136,7 @@ const del = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Customer delete successfully",
+      message: "Customer Delete Successfully",
     });
   } catch (error) {
     next(error);

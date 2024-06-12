@@ -15,11 +15,21 @@ app.post("/login", valid.emailUser, userController.login);
 app.delete("/user/:id", verifyToken, userController.deleteUser);
 
 // route costumer
-app.post("/costumer", valid.emailCostumers, costumerController.create);
-app.get("/costumer", costumerController.getAll);
-app.get("/costumer/:id", costumerController.getId);
-app.put("/costumer/:id", costumerController.update);
-app.delete("/costumer/:id", costumerController.del);
+app.post(
+  "/costumer",
+  verifyToken,
+  valid.emailCostumers,
+  costumerController.create
+);
+app.get("/costumer", verifyToken, costumerController.getAll);
+app.get("/costumer/:id", verifyToken, costumerController.getId);
+app.delete("/costumer/:id", verifyToken, costumerController.del);
+app.put(
+  "/costumer/:id",
+  verifyToken,
+  valid.emailCostumers,
+  costumerController.update
+);
 
 app.use(errorHandler);
 app.listen(3000, () => {
